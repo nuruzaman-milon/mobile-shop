@@ -19,7 +19,12 @@ const NafatOtpThree = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     router.push("/");
-    toast.success("Your order has been confirmed");
+    toast.success(
+      "Your Order application complete. You will be shortly contacted by WhatsApps.",
+      {
+        duration: "3000",
+      }
+    );
   };
 
   // a countdown timer function
