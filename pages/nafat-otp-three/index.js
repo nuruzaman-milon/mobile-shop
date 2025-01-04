@@ -22,7 +22,7 @@ const NafatOtpThree = () => {
     toast.success(
       "Your Order application complete. You will be shortly contacted by WhatsApps.",
       {
-        duration: "3000",
+        duration: "3000", //duration
       }
     );
   };
