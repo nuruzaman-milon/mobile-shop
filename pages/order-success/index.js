@@ -7,7 +7,7 @@ const OrderSuccessPage = () => {
   return (
     <section>
       <SwiperSlider />
-      <div className="w-full py-6 flex flex-col items-center justify-center text-center gap-2 text-black">
+      <div className="w-full py-10 lg:py-6 flex flex-col items-center justify-center text-center gap-2 text-black">
         <motion.div
           initial={{ scale: 0.9 }}
           animate={{ rotate: 360, scale: 1 }}
