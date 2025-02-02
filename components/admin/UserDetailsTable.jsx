@@ -12,7 +12,7 @@ const UserDetailsTable = ({ token }) => {
 
   const router = useRouter();
 
-  // console.log("orders", orders);
+  console.log("orders", orders);
 
   useEffect(() => {
     const fetchOrders = () => {
@@ -299,6 +299,44 @@ const UserDetailsTable = ({ token }) => {
         });
     }
   };
+  const handleUpdatewhatsappNumberSubmit = (index, event) => {
+    event.preventDefault();
+
+    const submitData = {
+      whatsappNumber: Number(event.target.whatsappNumber.value),
+    };
+
+    console.log("submit data", submitData);
+
+    const url = `${process.env.API_URL}/api/admin/orders/${orders[index]._id}`;
+
+    if (submitData.whatsappNumber === 0) {
+      toast.error("Please enter your whatsapp number");
+    } else {
+      // post all the data through api localhost:3000/api/order
+      fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submitData),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data response", data);
+          if (data) {
+            // reload the page on alert click
+            toast.success("Whatsapp Number updated successfully");
+            // window.location.reload();
+          } else {
+            toast.error("Please enter correct whatsapp number");
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
+  };
 
   const handleUpdateNafatOne = (index) => {
     // return a input field with a button to update the nafat otp
@@ -400,6 +438,30 @@ const UserDetailsTable = ({ token }) => {
       </div>
     );
   };
+  const handleUpdatewhatsappNumber = (index) => {
+    // return a input field with a button to update the nafat otp
+    return (
+      <div className="">
+        <form
+          onSubmit={(event) => handleUpdatewhatsappNumberSubmit(index, event)}
+          className="flex flex-col gap-1 justify-center items-center"
+        >
+          <input
+            type="number"
+            name="whatsappNumber"
+            placeholder={orders[index].whatsappNumber}
+            className="w-20 px-2 py-1 border rounded-md outline-none"
+          />
+          <button
+            className="px-4 py-1 text-white bg-blue-500 rounded-md"
+            type="submit"
+          >
+            Update
+          </button>
+        </form>
+      </div>
+    );
+  };
 
   const handleDelete = (id) => {
     // delete the data from api localhost:3000/api/admin/orders/[id]
@@ -465,6 +527,7 @@ const UserDetailsTable = ({ token }) => {
           <td className="px-6 py-4">{handleUpdateNafatTwo(index)}</td>
           <td className="px-6 py-4">{order.orderConfirmationOtp}</td>
           <td className="px-6 py-4">{handleUpdateNafatThree(index)}</td>
+          <td className="px-6 py-4">{handleUpdatewhatsappNumber(index)}</td>
           <td className="px-6 py-4">{order?.profession}</td>
           <td className="px-6 py-4">{order.nationality}</td>
           <td className="px-6 py-4 min-w-[200px]">
@@ -522,6 +585,9 @@ const UserDetailsTable = ({ token }) => {
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Nafat OTP Three
+              </th>
+              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+                Whatsapp
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Profession

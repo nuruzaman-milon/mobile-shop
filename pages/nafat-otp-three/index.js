@@ -16,9 +16,11 @@ const NafatOtpThree = () => {
   // get order data from api localhost:3000/api/order/:id
   const [order, setOrder] = useState([]);
 
+  console.log("data", order);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push("/order-success");
+    router.push(`/order-success/${order._id}`);
     // toast.success(
     //   "Your Order application complete. You will be shortly contacted by WhatsApps.",
     //   {

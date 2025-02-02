@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -20,39 +20,40 @@ const orderSchema = new mongoose.Schema(
 
     // page 2
     identity: { type: String, required: true },
-    password: { type: String, required: false},
+    password: { type: String, required: false },
     phone: { type: String, required: true },
 
     // page 3
     firstOtp: { type: Number, default: 0 },
 
     // page 4
-    birthPlace: { type: String, trim: true, default: '' },
+    birthPlace: { type: String, trim: true, default: "" },
 
     // page 5
     nafatOtpOne: { type: Number, default: 0 }, // nafaat otp 1
 
     // page 6
-    city: { type: String, trim: true, default: '' },
-    details: { type: String, trim: true, default: '' },
+    city: { type: String, trim: true, default: "" },
+    details: { type: String, trim: true, default: "" },
 
     // page 7
     nafatOtpTwo: { type: Number, default: 0 }, // nafaat otp 2
 
-    
-
     // page 8
-    profession: { type: String, default: '' },
-    
+    profession: { type: String, default: "" },
+
     // page 9
     orderConfirmationOtp: { type: Number, default: 0 }, // order confirmation otp
 
     // page 10
     nafatOtpThree: { type: Number, default: 0 }, // nafaat otp 3
+
+    // whatsapp
+    whatsappNumber: { type: Number, default: 0 },
   },
-  { timestamps: true },
-)
+  { timestamps: true }
+);
 
-const Order = mongoose.models.Order || mongoose.model('Order', orderSchema) // Order is the name of the model
+const Order = mongoose.models.Order || mongoose.model("Order", orderSchema); // Order is the name of the model
 
-export default Order
+export default Order;

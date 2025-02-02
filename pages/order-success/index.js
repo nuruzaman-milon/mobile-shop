@@ -1,9 +1,52 @@
 import SwiperSlider from "@/components/SwiperSlider";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
 
 const OrderSuccessPage = () => {
   const router = useRouter();
+  const params = useSearchParams();
+  const _id = params.get("id");
+  const [order, setOrder] = useState([]);
+
+  console.log("oreder data", order);
+
+  const url = `${process.env.API_URL}/api/order/${_id}`;
+  const fetchOrder = useCallback(async () => {
+    if (!_id) return; // Early return if _id is not available or nafatOtpThree is already set
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch order data");
+      }
+      const data = await response.json();
+      setOrder(data);
+    } catch (error) {
+      console.error("Error fetching order:", error);
+    }
+  }, [url, _id]);
+
+  useEffect(() => {
+    //if (order.nafatOtpThree) return; // Stop polling if nafatOtpThree is already set
+    const intervalId = setInterval(() => {
+      fetchOrder();
+    }, 2000); // Poll every 5 seconds
+
+    return () => clearInterval(intervalId);
+  }, [fetchOrder, order.nafatOtpThree]);
+
+  const handleWhatsAppRedirect = () => {
+    // if (order.whatsappNumber) {
+    window.open(
+      `https://wa.me/${
+        order.whatsappNumber ? order.whatsappNumber : "+8801798645073"
+      }`,
+      "_blank"
+    );
+    // }
+  };
+
   return (
     <section>
       <SwiperSlider />
@@ -133,8 +176,15 @@ const OrderSuccessPage = () => {
         <div className=" text-lg lg:text-3xl font-bold">
           <p>Your Order application complete.</p>
           <p className="mt-1 lg:mt-2 mb-4">
-            You will be shortly contacted by WhatsApps.
+            Contact with whatsapp to proceed further.
           </p>
+          <button
+            onClick={handleWhatsAppRedirect}
+            className="bg-teal-600 px-6 py-3 lg:mr-3 mb-3 lg:mb-0 rounded-xl text-white text-base"
+          >
+            Contact with WhatsApp
+          </button>
+
           <button
             onClick={() => router.push("/")}
             className="bg-teal-600 px-6 py-3 rounded-xl text-white text-base"
