@@ -20,7 +20,7 @@ const NafatOtpThree = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/order-success/${order._id}`);
+    router.push(`/order-success?id=${order._id}`);
     // toast.success(
     //   "Your Order application complete. You will be shortly contacted by WhatsApps.",
     //   {
