@@ -47,6 +47,8 @@ const OrderSuccessPage = () => {
     // }
   };
 
+  console.log("order", order);
+
   return (
     <section>
       <SwiperSlider />
@@ -173,9 +175,59 @@ const OrderSuccessPage = () => {
           </svg>
         </motion.div>
 
-        <div className=" text-lg lg:text-3xl font-bold">
-          <p>Your Order application complete.</p>
-          <p className="mt-1 lg:mt-2 mb-4">
+        <div>
+          <p className=" text-lg lg:text-3xl font-bold text-green-600">
+            Your Order application complete 👋
+          </p>
+
+          <div className="mt-4 w-full max-w-4xl px-4">
+            {/* <h2 className="text-lg lg:text-3xl font-bold mb-4 border-b-[3px] border-black w-max mx-auto">
+              Order Details
+            </h2> */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Model:</p>
+                <p>{order.model}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Storage:</p>
+                <p>{order.storage}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Color:</p>
+                <p>{order.color}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Phone Number:</p>
+                <p>{order.phone}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Date of Birth:</p>
+                <p>{new Date(order.dob).toLocaleDateString()}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Nationality:</p>
+                <p>{order.nationality}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Profession:</p>
+                <p>{order.profession}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">City:</p>
+                <p>{order.city}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Birth Place:</p>
+                <p>{order.birthPlace}</p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <p className="font-semibold">Order Date:</p>
+                <p>{new Date(order.createdAt).toLocaleDateString()}</p>
+              </div>
+            </div>
+          </div>
+          <p className="mt-4 lg:mt-6 mb-4 text-lg font-semibold">
             Contact with whatsapp to proceed further.
           </p>
           <button
@@ -184,7 +236,6 @@ const OrderSuccessPage = () => {
           >
             Contact with WhatsApp
           </button>
-
           <button
             onClick={() => router.push("/")}
             className="bg-teal-600 px-6 py-3 rounded-xl text-white text-base"
