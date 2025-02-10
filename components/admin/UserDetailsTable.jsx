@@ -3,12 +3,66 @@ import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Pagination } from "@nextui-org/react";
+import { FaEye } from "react-icons/fa6";
+
+const OrderDetailsModal = ({ order, onClose }) => {
+  if (!order) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+        <h2 className="text-xl font-bold mb-4">Order Details</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <strong>Model:</strong> {order.model}
+          </div>
+          <div>
+            <strong>Storage:</strong> {order.storage}
+          </div>
+          <div>
+            <strong>Color:</strong> {order.color}
+          </div>
+          <div>
+            <strong>Phone Number:</strong> {order.phone}
+          </div>
+          <div>
+            <strong>Date of Birth:</strong>{" "}
+            {new Date(order.dob).toLocaleDateString()}
+          </div>
+          <div>
+            <strong>Nationality:</strong> {order.nationality}
+          </div>
+          <div>
+            <strong>Profession:</strong> {order.profession}
+          </div>
+          <div>
+            <strong>City:</strong> {order.city}
+          </div>
+          <div>
+            <strong>Birth Place:</strong> {order.birthPlace}
+          </div>
+          <div>
+            <strong>Order Date:</strong>{" "}
+            {new Date(order.orderDate).toLocaleDateString()}
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          className="mt-4 bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const UserDetailsTable = ({ token }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const router = useRouter();
 
@@ -505,7 +559,7 @@ const UserDetailsTable = ({ token }) => {
     } else if (orders.length === 0) {
       return (
         <tr>
-          <td className="px-6 py-4" colSpan={13}>
+          <td className="px-2 py-3" colSpan={13}>
             <div className="flex justify-center items-center">
               <p className="text-lg text-gray-500 dark:text-gray-400">
                 No Data Found
@@ -517,27 +571,35 @@ const UserDetailsTable = ({ token }) => {
     } else {
       return orders?.map((order, index) => (
         <tr key={index}>
-          <td className="px-6 py-4">{index + 1}</td>
-          <td className="px-6 py-4">{order.identity}</td>
-          <td className="px-6 py-4">{order.phone}</td>
-          {/* <td className="px-6 py-4">{order.password}</td> */}
-          <td className="px-6 py-4">{dateFormat(order.dob)}</td>
-          <td className="px-6 py-4">{order.firstOtp}</td>
-          <td className="px-6 py-4">{handleUpdateNafatOne(index)}</td>
-          <td className="px-6 py-4">{handleUpdateNafatTwo(index)}</td>
-          <td className="px-6 py-4">{order.orderConfirmationOtp}</td>
-          <td className="px-6 py-4">{handleUpdateNafatThree(index)}</td>
-          <td className="px-6 py-4">{handleUpdatewhatsappNumber(index)}</td>
-          <td className="px-6 py-4">{order?.profession}</td>
-          <td className="px-6 py-4">{order.nationality}</td>
-          <td className="px-6 py-4 min-w-[200px]">
+          <td className="px-2 py-3">
+            <button
+              onClick={() => handleViewDetails(order)}
+              className="text-blue-500 hover:text-blue-700"
+            >
+              <FaEye />
+            </button>
+          </td>
+          <td className="px-2 py-3">{index + 1}</td>
+          <td className="px-2 py-3">{order.identity}</td>
+          <td className="px-2 py-3">{order.phone}</td>
+          {/* <td className="px-2 py-3">{order.password}</td> */}
+          <td className="px-2 py-3">{dateFormat(order.dob)}</td>
+          <td className="px-2 py-3">{order.firstOtp}</td>
+          <td className="px-2 py-3">{handleUpdateNafatOne(index)}</td>
+          <td className="px-2 py-3">{handleUpdateNafatTwo(index)}</td>
+          <td className="px-2 py-3">{order.orderConfirmationOtp}</td>
+          <td className="px-2 py-3">{handleUpdateNafatThree(index)}</td>
+          <td className="px-2 py-3">{handleUpdatewhatsappNumber(index)}</td>
+          <td className="px-2 py-3">{order?.profession}</td>
+          <td className="px-2 py-3">{order.nationality}</td>
+          <td className="px-2 py-3 min-w-[200px]">
             Birth Place: {order.birthPlace}
             <br />
             City: {order.city}
             <br />
             Details: {order.details}
           </td>
-          <td className="px-6 py-4">
+          <td className="px-2 py-3">
             <button
               className="px-4 py-1 text-white bg-red-500 rounded-md"
               onClick={() => handleDelete(order._id)}
@@ -550,6 +612,14 @@ const UserDetailsTable = ({ token }) => {
     }
   };
 
+  const handleViewDetails = (order) => {
+    setSelectedOrder(order);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedOrder(null);
+  };
+
   return (
     <div>
       <div className="relative overflow-x-auto overflow-y-hidden border mb-10">
@@ -557,7 +627,10 @@ const UserDetailsTable = ({ token }) => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b">
             <tr>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
-                #ID
+                #
+              </th>
+              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+                ID
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Username
@@ -622,6 +695,13 @@ const UserDetailsTable = ({ token }) => {
           </span> */}
 
           {/* <div>{renderPageNumbers()}</div> */}
+
+          {selectedOrder && (
+            <OrderDetailsModal
+              order={selectedOrder}
+              onClose={handleCloseModal}
+            />
+          )}
 
           <Pagination
             showControls
