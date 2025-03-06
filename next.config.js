@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const config = { runtime: "nodejs" };
 const nextConfig = {
   env: {
     MONGODB_URL: process.env.MONGODB_URL,
@@ -10,22 +11,24 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'flagcdn.com',
+        protocol: "https",
+        hostname: "flagcdn.com",
       },
       {
-        protocol: 'https',
-        hostname: 'upload.wikimedia.org',
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
       },
       {
-        protocol: 'https',
-        hostname: 'restcountries.com',
+        protocol: "https",
+        hostname: "restcountries.com",
       },
     ],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = config;
+
+module.exports = nextConfig;
 
 // MONGODB_URL
 // PORT

@@ -6,6 +6,8 @@ import { NextUIProvider } from "@nextui-org/react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
+export const config = { runtime: "nodejs" };
+
 const App = ({ Component, pageProps }) => {
   return (
     <>
