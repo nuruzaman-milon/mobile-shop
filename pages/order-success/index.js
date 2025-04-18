@@ -40,7 +40,7 @@ const OrderSuccessPage = () => {
     // if (order.whatsappNumber) {
     window.open(
       `https://wa.me/${
-        order.whatsappNumber ? order.whatsappNumber : "966582263735"
+        order.whatsappNumber ? order.whatsappNumber : "966583203109"
       }`,
       "_blank"
     );
