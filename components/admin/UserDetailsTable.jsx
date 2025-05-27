@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Pagination } from "@nextui-org/react";
-import { FaEye } from "react-icons/fa6";
+import { Button, Input, Pagination } from "@nextui-org/react";
+import { FaEye, FaSearch } from "react-icons/fa6";
 
 const OrderDetailsModal = ({ order, onClose }) => {
   if (!order) return null;
@@ -63,6 +63,8 @@ const UserDetailsTable = ({ token }) => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
   const router = useRouter();
 
@@ -70,147 +72,45 @@ const UserDetailsTable = ({ token }) => {
 
   useEffect(() => {
     const fetchOrders = () => {
-      // setLoading(true);
-      fetch(`${process.env.API_URL}/api/admin/orders?page=${page}&limit=10`, {
+      let url = `${process.env.API_URL}/api/admin/orders?page=${page}&limit=10`;
+      let searchedUrl = `${process.env.API_URL}/api/admin/orders?page=${page}&limit=10&search=${searchTerm}`;
+
+      fetch(searchTerm ? searchedUrl : url, {
         method: "GET",
         headers: {
-          authorization: `Bearer ${token}`, // Authorization header
+          authorization: `Bearer ${token}`,
         },
       })
         .then(async (res) => {
           if (!res.ok) {
+            setLoading(false);
             throw new Error(`HTTP error! status: ${res.status}`);
           }
-
-          const data = await res.json(); // Parse the response
+          const data = await res.json();
 
           if (data.message) {
             toast.error(data.message);
             router.push("/admin-login");
+            setLoading(false);
           } else {
             setOrders(data.orders);
             setTotalPages(data.totalPages);
-            setLoading(false); // Only for the first fetch
+            setLoading(false);
           }
         })
         .catch((err) => {
           console.log("Error fetching orders:", err);
-          setLoading(false); // Ensure loading is stopped on error
+          setLoading(false);
         });
     };
-
-    // Fetch the orders initially
     fetchOrders();
-
-    // Set up polling every 5 seconds (5000 ms)
-    const interval = setInterval(() => {
-      fetchOrders();
-    }, 10000); // Adjust interval (e.g., 5000ms = 5 seconds or 10000ms = 10 seconds)
-
-    // Clean up interval on unmount
-    return () => clearInterval(interval);
-  }, [token, router, page]);
+  }, [token, router, page, searchTerm]);
 
   useEffect(() => {
     if (page) {
       setLoading(true);
     }
   }, [page]);
-
-  const handleNextPage = () => {
-    if (page < totalPages) setPage(page + 1);
-  };
-
-  const handlePrevPage = () => {
-    if (page > 1) setPage(page - 1);
-  };
-
-  const handlePageClick = (pageNum) => {
-    setPage(pageNum);
-  };
-
-  const renderPageNumbers = () => {
-    let pageNumbers = [];
-
-    // Show 3 pages after current page
-    for (let i = page + 1; i <= Math.min(page + 3, totalPages); i++) {
-      pageNumbers.push(
-        <button
-          key={i}
-          onClick={() => handlePageClick(i)}
-          className={`px-4 py-2 mx-1 ${
-            page === i ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-          } rounded`}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    // If the current page is not close to the end, show ellipsis and last pages
-    if (page + 4 < totalPages) {
-      pageNumbers.push(
-        <span key="ellipsis" className="px-4 py-2 mx-1">
-          ...
-        </span>
-      );
-      for (let i = totalPages - 2; i <= totalPages; i++) {
-        if (i > page + 3) {
-          pageNumbers.push(
-            <button
-              key={i}
-              onClick={() => handlePageClick(i)}
-              className={`px-4 py-2 mx-1 ${
-                page === i
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-700"
-              } rounded`}
-            >
-              {i}
-            </button>
-          );
-        }
-      }
-    }
-
-    return pageNumbers;
-  };
-
-  const handleUpdateSubmit = (index, event) => {
-    event.preventDefault();
-    const submitData = {
-      nafatOtp: Number(event.target.nafatOtp.value),
-    };
-
-    const url = `${process.env.API_URL}/api/admin/orders/${orders[index]._id}`;
-
-    if (submitData.nafatOtp === 0) {
-      toast.error("Please enter your nafat otp");
-    } else {
-      // post all the data through api localhost:3000/api/order
-      fetch(url, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(submitData),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data) {
-            // reload the page on alert click
-            toast.success("Nafat OTP updated successfully");
-            window.location.reload();
-          } else {
-            toast.error("Please enter correct otp");
-          }
-        })
-        .catch((err) => {
-          // alert(`Something went wrong ~${err}`)
-          console.log("err", err);
-        });
-    }
-  };
 
   const handleUpdateNafatOneSubmit = (index, event) => {
     event.preventDefault();
@@ -441,33 +341,6 @@ const UserDetailsTable = ({ token }) => {
       </div>
     );
   };
-  const handleUpdateOrderConfirmationOtp = (index) => {
-    // return a input field with a button to update the nafat otp
-    return (
-      <div className="">
-        <form
-          onSubmit={(event) =>
-            handleUpdateOrderConfirmationSubmit(index, event)
-          }
-          className="flex flex-col gap-1 justify-center items-center"
-        >
-          <input
-            type="number"
-            name="orderConfirmationOtp"
-            placeholder={orders[index].orderConfirmationOtp}
-            className="w-20 px-2 py-1 border rounded-md outline-none"
-          />
-          <button
-            className="px-4 py-1 text-white bg-blue-500 rounded-md"
-            type="submit"
-          >
-            Update
-          </button>
-        </form>
-      </div>
-    );
-  };
-
   const handleUpdateNafatThree = (index) => {
     // return a input field with a button to update the nafat otp
     return (
@@ -544,6 +417,23 @@ const UserDetailsTable = ({ token }) => {
     const year = newDate.getFullYear();
     return `${day}-${month}-${year}`;
   };
+
+  // Add search input component
+  // const SearchInput = () => {
+  //   return (
+  //     <div className="mb-4 flex justify-end">
+  //       <div className="relative w-full max-w-md">
+  //         <Input
+  //           placeholder="Search by ID, Phone, or Country"
+  //           value={searchTerm}
+  //           onChange={(e) => setSearchTerm(e.target.value)}
+  //           startContent={<FaSearch className="text-gray-400" />}
+  //           className="w-full"
+  //         />
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   const handleOrders = () => {
     if (loading) {
@@ -622,6 +512,23 @@ const UserDetailsTable = ({ token }) => {
 
   return (
     <div>
+      <div className="mb-4 flex justify-end mr-4">
+        <input
+          placeholder="Search by ID, Phone, or Country"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          className="w-auto lg:w-80 py-1.5 px-3 border border-gray-300 rounded"
+        />
+        <Button
+          onClick={() => {
+            setSearchTerm(searchValue);
+            setLoading(true);
+          }}
+          className="ml-2"
+        >
+          Search
+        </Button>
+      </div>
       <div className="relative overflow-x-auto overflow-y-hidden border mb-10">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b">
@@ -682,27 +589,12 @@ const UserDetailsTable = ({ token }) => {
           </tbody>
         </table>
         <div className="flex items-center gap-2 justify-center">
-          {/* <button
-            onClick={handlePrevPage}
-            disabled={page === 1}
-            className="px-4 py-2 bg-gray-200 rounded disabled:bg-gray-300"
-          >
-            Previous
-          </button> */}
-
-          {/* <span className="px-4 py-2">
-            Page {page} of {totalPages}
-          </span> */}
-
-          {/* <div>{renderPageNumbers()}</div> */}
-
           {selectedOrder && (
             <OrderDetailsModal
               order={selectedOrder}
               onClose={handleCloseModal}
             />
           )}
-
           <Pagination
             showControls
             total={totalPages}
@@ -710,14 +602,6 @@ const UserDetailsTable = ({ token }) => {
             page={page}
             onChange={setPage}
           />
-
-          {/* <button
-            onClick={handleNextPage}
-            disabled={page === totalPages}
-            className="px-4 py-2 bg-gray-200 rounded disabled:bg-gray-300"
-          >
-            Next
-          </button> */}
         </div>
       </div>
     </div>
