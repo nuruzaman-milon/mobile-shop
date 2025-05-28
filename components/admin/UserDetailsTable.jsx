@@ -104,6 +104,9 @@ const UserDetailsTable = ({ token }) => {
         });
     };
     fetchOrders();
+    // Set up interval for periodic fetching
+    const intervalId = setInterval(fetchOrders, 10000); // 10 seconds
+    return () => clearInterval(intervalId);
   }, [token, router, page, searchTerm]);
 
   useEffect(() => {
