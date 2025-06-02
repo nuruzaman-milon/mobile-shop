@@ -65,15 +65,16 @@ const UserDetailsTable = ({ token }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const router = useRouter();
 
-  console.log("orders", orders);
+  console.log("selectedRows", selectedRows);
 
   useEffect(() => {
     const fetchOrders = () => {
-      let url = `${process.env.API_URL}/api/admin/orders?page=${page}&limit=10`;
-      let searchedUrl = `${process.env.API_URL}/api/admin/orders?page=${page}&limit=10&search=${searchTerm}`;
+      let url = `${process.env.API_URL}/api/admin/orders?page=${page}&limit=20`;
+      let searchedUrl = `${process.env.API_URL}/api/admin/orders?page=${page}&limit=20&search=${searchTerm}`;
 
       fetch(searchTerm ? searchedUrl : url, {
         method: "GET",
@@ -394,23 +395,25 @@ const UserDetailsTable = ({ token }) => {
   };
 
   const handleDelete = (id) => {
+    console.log("id", id);
+
     // delete the data from api localhost:3000/api/admin/orders/[id]
-    fetch(`${process.env.API_URL}/api/admin/orders/${id}`, {
-      method: "DELETE",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          // reload the page on alert click
-          toast.success("User deleted successfully");
-          window.location.reload();
-        } else {
-          toast.error("Something went wrong");
-        }
-      })
-      .catch((err) => {
-        toast.error(`Something went wrong ~${err}`);
-      });
+    // fetch(`${process.env.API_URL}/api/admin/orders/${id}`, {
+    //   method: "DELETE",
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (data) {
+    //       // reload the page on alert click
+    //       toast.success("User deleted successfully");
+    //       window.location.reload();
+    //     } else {
+    //       toast.error("Something went wrong");
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     toast.error(`Something went wrong ~${err}`);
+    //   });
   };
 
   const dateFormat = (date) => {
@@ -421,28 +424,61 @@ const UserDetailsTable = ({ token }) => {
     return `${day}-${month}-${year}`;
   };
 
-  // Add search input component
-  // const SearchInput = () => {
-  //   return (
-  //     <div className="mb-4 flex justify-end">
-  //       <div className="relative w-full max-w-md">
-  //         <Input
-  //           placeholder="Search by ID, Phone, or Country"
-  //           value={searchTerm}
-  //           onChange={(e) => setSearchTerm(e.target.value)}
-  //           startContent={<FaSearch className="text-gray-400" />}
-  //           className="w-full"
-  //         />
-  //       </div>
-  //     </div>
-  //   );
-  // };
+  //delete multiple row
+  const toggleRowSelection = (orderId) => {
+    setSelectedRows((prev) =>
+      prev.includes(orderId)
+        ? prev.filter((id) => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedRows.length === orders.length) {
+      setSelectedRows([]);
+    } else {
+      setSelectedRows(orders.map((order) => order._id));
+    }
+  };
+
+  const handleBulkDelete = () => {
+    if (selectedRows.length === 0) {
+      toast.error("Please select at least one row to delete");
+      return;
+    }
+
+    if (
+      !confirm(
+        `Are you sure you want to delete ${selectedRows.length} selected items?`
+      )
+    ) {
+      return;
+    }
+
+    Promise.all(
+      selectedRows.map((id) =>
+        fetch(`${process.env.API_URL}/api/admin/orders/${id}`, {
+          method: "DELETE",
+        })
+      )
+    )
+      .then(() => {
+        toast.success(`Successfully deleted ${selectedRows.length} items`);
+        setSelectedRows([]);
+        // Refresh the data
+        setLoading(true);
+        //fetchOrders(); // You might need to define this separately if it's not already
+      })
+      .catch((err) => {
+        toast.error(`Error deleting items: ${err.message}`);
+      });
+  };
 
   const handleOrders = () => {
     if (loading) {
       return (
         <tr>
-          <td className="py-10 md:py-20" colSpan={13}>
+          <td className="py-10 md:py-20" colSpan={14}>
             <div className="flex justify-center items-center">
               <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-teal-500"></div>
             </div>
@@ -452,7 +488,7 @@ const UserDetailsTable = ({ token }) => {
     } else if (orders.length === 0) {
       return (
         <tr>
-          <td className="px-2 py-3" colSpan={13}>
+          <td className="px-2 py-3" colSpan={14}>
             <div className="flex justify-center items-center">
               <p className="text-lg text-gray-500 dark:text-gray-400">
                 No Data Found
@@ -464,6 +500,14 @@ const UserDetailsTable = ({ token }) => {
     } else {
       return orders?.map((order, index) => (
         <tr key={index}>
+          <td className="px-2 py-3">
+            <input
+              type="checkbox"
+              checked={selectedRows.includes(order._id)}
+              onChange={() => toggleRowSelection(order._id)}
+              className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+            />
+          </td>
           <td className="px-2 py-3">
             <button
               onClick={() => handleViewDetails(order)}
@@ -515,6 +559,16 @@ const UserDetailsTable = ({ token }) => {
 
   return (
     <div>
+      <div className="flex items-center">
+        <Button
+          onClick={handleBulkDelete}
+          color="danger"
+          className="mr-4"
+          disabled={selectedRows.length === 0}
+        >
+          Delete Selected ({selectedRows.length})
+        </Button>
+      </div>
       <div className="mb-4 flex justify-end mr-4">
         <input
           placeholder="Search by ID, Phone, or Country"
@@ -536,6 +590,16 @@ const UserDetailsTable = ({ token }) => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b">
             <tr>
+              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+                <input
+                  type="checkbox"
+                  checked={
+                    selectedRows.length === orders.length && orders.length > 0
+                  }
+                  onChange={toggleSelectAll}
+                  className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+                />
+              </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 #
               </th>
