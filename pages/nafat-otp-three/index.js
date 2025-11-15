@@ -419,9 +419,10 @@ export default function ModernNafatOtpThree() {
             <p className="text-sm text-gray-400 flex items-start gap-2">
               <FaShieldAlt className="text-teal-400 mt-0.5 flex-shrink-0" />
               <span>
-                <strong className="text-teal-400">Secure Process:</strong> This
+                <strong className="text-teal-400">Secure Process:</strong>{" "}
+                {`This
                 final verification is processed through Saudi Arabia's official
-                Nafath system.
+                Nafath system.`}
               </span>
             </p>
           </div>

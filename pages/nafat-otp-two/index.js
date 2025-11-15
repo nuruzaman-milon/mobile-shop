@@ -435,7 +435,7 @@ export default function ModernNafatOtpTwo() {
               <span>
                 <strong className="text-teal-400">Secure Process:</strong> This
                 second verification ensures maximum security for your order.
-                This is conducted through Saudi Arabia's official Nafath system.
+                {`This is conducted through Saudi Arabia's official Nafath system.`}
               </span>
             </p>
           </div>

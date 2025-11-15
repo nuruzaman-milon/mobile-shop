@@ -355,7 +355,7 @@ export default function ModernOrderConfirmationOtp() {
                 className="text-teal-400 hover:text-teal-300 text-sm font-medium transition-colors"
                 onClick={() => toast.info("Resend functionality coming soon")}
               >
-                Didn't receive the code? Resend OTP
+                {`Didn't receive the code? Resend OTP`}
               </button>
             </div>
 
