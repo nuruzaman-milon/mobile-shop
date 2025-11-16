@@ -11,7 +11,7 @@ export const config = { runtime: "nodejs" };
 const App = ({ Component, pageProps }) => {
   return (
     <>
-      <Toaster />
+      <Toaster position="top-right" />
       <NextUIProvider>
         <Provider store={store}>
           <Component {...pageProps} />
