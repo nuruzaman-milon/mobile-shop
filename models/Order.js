@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
+    fullName: { type: String },
+    companyName: { type: String },
+    monthlySalary: { type: Number },
     // page 1
     model: {
       type: String,

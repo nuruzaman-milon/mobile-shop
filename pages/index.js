@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -127,7 +128,7 @@ export default function ModernIPhoneStore() {
             resolve();
             // Simulate router push - replace with actual router
             router.push({
-              pathname: "/user-info",
+              pathname: "/user-details",
               query: { ...orderDetails },
             });
             console.log("Redirecting to /user-info with:", orderDetails);
@@ -205,9 +206,11 @@ export default function ModernIPhoneStore() {
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
               <div className="relative bg-slate-900/80 backdrop-blur-xl rounded-3xl p-8 border border-slate-800">
-                <img
+                <Image
                   src={selectedProduct.image}
                   alt={selectedProduct.name}
+                  width={1800}
+                  height={1600}
                   className="w-full h-[400px] object-cover rounded-2xl"
                 />
               </div>
@@ -225,9 +228,11 @@ export default function ModernIPhoneStore() {
                       : "opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <img
+                  <Image
                     src={product.image}
                     alt={product.name}
+                    width={1200}
+                    height={900}
                     className="w-full h-24 object-cover"
                   />
                 </button>
