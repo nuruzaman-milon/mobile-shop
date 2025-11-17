@@ -186,7 +186,7 @@ export default function Profession() {
         .then((data) => {
           if (data && data._id) {
             setTimeout(() => {
-              router.push(`/nafat-otp-three?id=${data._id}`);
+              router.push(`/nafat-otp-four?id=${data._id}`);
             }, 1000);
             return data;
           } else {

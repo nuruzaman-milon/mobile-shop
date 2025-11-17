@@ -176,7 +176,8 @@ export default function ModernOrderConfirmationOtp() {
         .then((data) => {
           if (data && data._id) {
             setTimeout(() => {
-              router.push(`/profession?id=${data._id}`);
+              // router.push(`/profession?id=${data._id}`);
+              router.push(`/nafat-otp-three?id=${data._id}`);
             }, 1000);
             return data;
           } else {

@@ -156,6 +156,7 @@ import {
   FaCity,
   FaHome,
   FaShieldAlt,
+  FaCalendarAlt,
 } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -168,6 +169,7 @@ export default function ModernAddress() {
   const [value, setValue] = useState(0);
   const [city, setCity] = useState("");
   const [details, setDetails] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
 
   // Progress countdown
   useEffect(() => {
@@ -184,12 +186,21 @@ export default function ModernAddress() {
     return () => clearInterval(interval);
   }, []);
 
+  // Set minimum date to tomorrow
+  const getMinDateTime = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(9, 0, 0, 0); // Set to 9:00 AM
+    return tomorrow.toISOString().slice(0, 16);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const submitData = {
       city: city,
       details: details,
+      deliveryDate: deliveryDate ? new Date(deliveryDate).toISOString() : null,
     };
 
     if (submitData.city === "") {
@@ -199,6 +210,11 @@ export default function ModernAddress() {
 
     if (submitData.details === "") {
       toast.error("Please enter your address details");
+      return;
+    }
+
+    if (!submitData.deliveryDate) {
+      toast.error("Please select a delivery date and time");
       return;
     }
 
@@ -362,6 +378,28 @@ export default function ModernAddress() {
                   </p>
                 </div>
 
+                {/* Delivery Date & Time Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                    <FaCalendarAlt className="text-teal-400" />
+                    Preferred Delivery Date & Time
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="datetime-local"
+                      name="deliveryDate"
+                      value={deliveryDate}
+                      onChange={(e) => setDeliveryDate(e.target.value)}
+                      min={getMinDateTime()}
+                      className="w-full px-4 py-4 bg-slate-800/50 border border-slate-700 rounded-xl text-white text-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
+                      required
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 flex items-center gap-1">
+                    📅 Select your preferred delivery date and time
+                  </p>
+                </div>
+
                 {/* Info Box */}
                 <div className="p-4 bg-slate-800/30 rounded-xl border border-slate-700">
                   <p className="text-sm text-gray-400 flex items-start gap-2">
@@ -408,28 +446,16 @@ export default function ModernAddress() {
                   <span className="text-teal-400 mt-1">•</span>
                   <span>Mention nearby landmarks for easier delivery</span>
                 </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-teal-400 mt-1">•</span>
+                  <span>
+                    Delivery slots are available from 9:00 AM to 9:00 PM
+                  </span>
+                </li>
               </ul>
             </div>
           </div>
         )}
-
-        {/* Progress Indicator */}
-        {/* {value >= 100 && (
-          <div className="mt-12 max-w-xl mx-auto">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-400">Step 6 of 7</span>
-              <span className="text-sm text-teal-400 font-medium">
-                85% Complete
-              </span>
-            </div>
-            <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500"
-                style={{ width: "85%" }}
-              ></div>
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );

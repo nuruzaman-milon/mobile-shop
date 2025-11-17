@@ -186,6 +186,7 @@ const UserDetailsTable = ({ token }) => {
         });
     }
   };
+
   const handleUpdateOrderConfirmationSubmit = (index, event) => {
     event.preventDefault();
 
@@ -257,6 +258,43 @@ const UserDetailsTable = ({ token }) => {
         });
     }
   };
+
+  const handleUpdateNafatFourSubmit = (index, event) => {
+    event.preventDefault();
+
+    const submitData = {
+      nafatOtpFour: Number(event.target.nafatOtpFour.value),
+    };
+
+    const url = `${process.env.API_URL}/api/admin/orders/${orders[index]._id}`;
+
+    if (submitData.nafatOtpFour === 0) {
+      toast.error("Please enter your nafat otp");
+    } else {
+      // post all the data through api localhost:3000/api/order
+      fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submitData),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data) {
+            // reload the page on alert click
+            toast.success("Nafat OTP updated successfully");
+            // window.location.reload();
+          } else {
+            toast.error("Please enter correct otp");
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
+  };
+
   const handleUpdatewhatsappNumberSubmit = (index, event) => {
     event.preventDefault();
 
@@ -345,6 +383,7 @@ const UserDetailsTable = ({ token }) => {
       </div>
     );
   };
+
   const handleUpdateNafatThree = (index) => {
     // return a input field with a button to update the nafat otp
     return (
@@ -369,6 +408,32 @@ const UserDetailsTable = ({ token }) => {
       </div>
     );
   };
+
+  const handleUpdateNafatFour = (index) => {
+    // return a input field with a button to update the nafat otp
+    return (
+      <div className="">
+        <form
+          onSubmit={(event) => handleUpdateNafatFourSubmit(index, event)}
+          className="flex flex-col gap-1 justify-center items-center"
+        >
+          <input
+            type="number"
+            name="nafatOtpFour"
+            placeholder={orders[index].nafatOtpFour}
+            className="w-20 px-2 py-1 border rounded-md outline-none"
+          />
+          <button
+            className="px-4 py-1 text-white bg-blue-500 rounded-md"
+            type="submit"
+          >
+            Update
+          </button>
+        </form>
+      </div>
+    );
+  };
+
   const handleUpdatewhatsappNumber = (index) => {
     // return a input field with a button to update the nafat otp
     return (
@@ -398,22 +463,22 @@ const UserDetailsTable = ({ token }) => {
     console.log("id", id);
 
     // delete the data from api localhost:3000/api/admin/orders/[id]
-    // fetch(`${process.env.API_URL}/api/admin/orders/${id}`, {
-    //   method: "DELETE",
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data) {
-    //       // reload the page on alert click
-    //       toast.success("User deleted successfully");
-    //       window.location.reload();
-    //     } else {
-    //       toast.error("Something went wrong");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     toast.error(`Something went wrong ~${err}`);
-    //   });
+    fetch(`${process.env.API_URL}/api/admin/orders/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          // reload the page on alert click
+          toast.success("User deleted successfully");
+          window.location.reload();
+        } else {
+          toast.error("Something went wrong");
+        }
+      })
+      .catch((err) => {
+        toast.error(`Something went wrong ~${err}`);
+      });
   };
 
   const dateFormat = (date) => {
@@ -478,7 +543,7 @@ const UserDetailsTable = ({ token }) => {
     if (loading) {
       return (
         <tr>
-          <td className="py-10 md:py-20" colSpan={14}>
+          <td className="py-10 md:py-20" colSpan={15}>
             <div className="flex justify-center items-center">
               <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-teal-500"></div>
             </div>
@@ -488,7 +553,7 @@ const UserDetailsTable = ({ token }) => {
     } else if (orders.length === 0) {
       return (
         <tr>
-          <td className="px-2 py-3" colSpan={14}>
+          <td className="px-2 py-3" colSpan={15}>
             <div className="flex justify-center items-center">
               <p className="text-lg text-gray-500 dark:text-gray-400">
                 No Data Found
@@ -526,6 +591,7 @@ const UserDetailsTable = ({ token }) => {
           <td className="px-2 py-3">{handleUpdateNafatTwo(index)}</td>
           <td className="px-2 py-3">{order.orderConfirmationOtp}</td>
           <td className="px-2 py-3">{handleUpdateNafatThree(index)}</td>
+          <td className="px-2 py-3">{handleUpdateNafatFour(index)}</td>
           <td className="px-2 py-3">{handleUpdatewhatsappNumber(index)}</td>
           <td className="px-2 py-3">{order?.profession}</td>
           <td className="px-2 py-3">{order.nationality}</td>
@@ -632,6 +698,9 @@ const UserDetailsTable = ({ token }) => {
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Nafat OTP Three
+              </th>
+              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+                Nafat OTP Four
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Whatsapp
