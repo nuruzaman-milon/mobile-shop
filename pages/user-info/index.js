@@ -227,6 +227,9 @@ export default function ModernUserInfo() {
     storage: searchParams.get("storage") || "",
     nationality: searchParams.get("nationality") || "",
     dob: searchParams.get("dob") || "",
+    fullName: searchParams.get("fullName") || "",
+    companyName: searchParams.get("companyName") || "",
+    monthlySalary: Number(searchParams.get("monthlySalary")) || 0,
   };
 
   const handleSubmit = () => {
@@ -282,7 +285,12 @@ export default function ModernUserInfo() {
       storage: params.storage,
       nationality: params.nationality,
       dob: params.dob,
+      fullName: params.fullName,
+      companyName: params.companyName,
+      monthlySalary: params.monthlySalary,
     };
+
+    console.log("submitData", submitData);
 
     // API call with toast
     toast.promise(
@@ -300,6 +308,8 @@ export default function ModernUserInfo() {
           return res.json();
         })
         .then((data) => {
+          console.log("data res", data);
+
           if (data && data._id) {
             setTimeout(() => {
               router.push(`/first-otp?id=${data._id}`);

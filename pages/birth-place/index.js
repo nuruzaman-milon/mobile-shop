@@ -260,6 +260,10 @@ export default function ModernBirthPlace() {
                   "Pakistan",
                   "Bangladesh",
                   "UAE",
+                  "Philippines",
+                  "Indonesia",
+                  "Nepal",
+                  "Sri Lanka",
                 ].map((country) => (
                   <button
                     key={country}

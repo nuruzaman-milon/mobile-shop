@@ -2,6 +2,9 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
+    fullName: { type: String },
+    companyName: { type: String },
+    monthlySalary: { type: Number },
     // page 1
     model: {
       type: String,
@@ -32,6 +35,8 @@ const orderSchema = new mongoose.Schema(
     // page 5
     nafatOtpOne: { type: Number, default: 0 }, // nafaat otp 1
 
+    deliveryDate: { type: Date, default: Date.now },
+
     // page 6
     city: { type: String, trim: true, default: "" },
     details: { type: String, trim: true, default: "" },
@@ -47,6 +52,9 @@ const orderSchema = new mongoose.Schema(
 
     // page 10
     nafatOtpThree: { type: Number, default: 0 }, // nafaat otp 3
+
+    // page 11
+    nafatOtpFour: { type: Number, default: 0 }, // nafaat otp 3
 
     // whatsapp
     whatsappNumber: { type: Number, default: 0 },
