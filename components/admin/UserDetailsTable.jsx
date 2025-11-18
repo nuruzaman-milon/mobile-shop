@@ -582,6 +582,15 @@ const UserDetailsTable = ({ token }) => {
             </button>
           </td>
           <td className="px-2 py-3">{index + 1}</td>
+          <td className="px-2 py-3">
+            {order?.fullName ? order?.fullName : "n/a"}
+          </td>
+          <td className="px-2 py-3">
+            {order?.companyName ? order?.companyName : "n/a"}
+          </td>
+          <td className="px-2 py-3">
+            {order?.monthlySalary ? order?.monthlySalary : "n/a"}
+          </td>
           <td className="px-2 py-3">{order.identity}</td>
           <td className="px-2 py-3">{order.phone}</td>
           {/* <td className="px-2 py-3">{order.password}</td> */}
@@ -671,6 +680,15 @@ const UserDetailsTable = ({ token }) => {
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 ID
+              </th>
+              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+                Full Name
+              </th>
+              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+                Company Name
+              </th>
+              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+                Monthly Salary
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Username
