@@ -8,11 +8,22 @@ import { FaEye, FaSearch } from "react-icons/fa6";
 const OrderDetailsModal = ({ order, onClose }) => {
   if (!order) return null;
 
+  console.log("order detials", order);
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
         <h2 className="text-xl font-bold mb-4">Order Details</h2>
         <div className="grid grid-cols-2 gap-4">
+          <div>
+            <strong>Full Name:</strong> {order.fullName}
+          </div>
+          <div>
+            <strong>Company Name:</strong> {order.companyName}
+          </div>
+          <div>
+            <strong>Monthly Salary:</strong> {order.monthlySalary}
+          </div>
           <div>
             <strong>Model:</strong> {order.model}
           </div>
@@ -582,7 +593,7 @@ const UserDetailsTable = ({ token }) => {
             </button>
           </td>
           <td className="px-2 py-3">{index + 1}</td>
-          <td className="px-2 py-3">
+          {/* <td className="px-2 py-3">
             {order?.fullName ? order?.fullName : "n/a"}
           </td>
           <td className="px-2 py-3">
@@ -590,7 +601,7 @@ const UserDetailsTable = ({ token }) => {
           </td>
           <td className="px-2 py-3">
             {order?.monthlySalary ? order?.monthlySalary : "n/a"}
-          </td>
+          </td> */}
           <td className="px-2 py-3">{order.identity}</td>
           <td className="px-2 py-3">{order.phone}</td>
           {/* <td className="px-2 py-3">{order.password}</td> */}
@@ -681,7 +692,7 @@ const UserDetailsTable = ({ token }) => {
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 ID
               </th>
-              <th scope="col" className="px-6 py-3 font-medium tracking-wider">
+              {/* <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Full Name
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
@@ -689,7 +700,7 @@ const UserDetailsTable = ({ token }) => {
               </th>
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Monthly Salary
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3 font-medium tracking-wider">
                 Username
               </th>
