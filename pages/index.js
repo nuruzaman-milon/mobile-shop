@@ -11,35 +11,42 @@ import {
   FaHeadset,
 } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi";
+import phone1 from "@/public/images/iphone/phone1.jpeg";
+import phone2 from "@/public/images/iphone/phone2.jpeg";
+import phone3 from "@/public/images/iphone/phone3.jpeg";
+import phone4 from "@/public/images/iphone/phone4.jpeg";
+import phone5 from "@/public/images/iphone/phone5.jpeg";
 
 const products = [
   {
     _id: 1,
     name: "Deep Purple",
     price: 100,
-    image:
-      "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=800&auto=format&fit=crop",
+    image: phone1,
   },
   {
     _id: 2,
     name: "Midnight Blue",
     price: 200,
-    image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=800&auto=format&fit=crop",
+    image: phone2,
   },
   {
     _id: 3,
     name: "Starlight",
     price: 300,
-    image:
-      "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=800&auto=format&fit=crop",
+    image: phone3,
   },
   {
     _id: 4,
     name: "Product Red",
     price: 400,
-    image:
-      "https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=800&auto=format&fit=crop",
+    image: phone4,
+  },
+  {
+    _id: 5,
+    name: "Product green",
+    price: 400,
+    image: phone5,
   },
 ];
 
@@ -217,7 +224,7 @@ export default function ModernIPhoneStore() {
             </div>
 
             {/* Thumbnail Gallery */}
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-5 gap-4">
               {products.map((product) => (
                 <button
                   key={product._id}
